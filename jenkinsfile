@@ -1,5 +1,7 @@
 pipeline {
-    agent 'fonetwish'
+    agent {
+        label 'fonetwish'
+    }
     stages {
         stage('Get Current Branch') {
             steps {
