@@ -3,11 +3,6 @@ pipeline {
         label 'fonetwish'
     }
     stages {
-        stage('Get Current Branch') {
-            steps {
-		        sh "echo Current Branch Name: ${env.BRANCH_NAME}"
-            }
-        }
         stage('Maven Clean Install') {
             when {
 		        anyOf {
@@ -15,7 +10,7 @@ pipeline {
 		        }
             } 	
             steps {
-                sh 'mvn clean install'
+                powershell 'mvn clean install'
             }
         }
     }
