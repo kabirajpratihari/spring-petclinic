@@ -48,8 +48,10 @@ pipeline {
 						$NOW=Get-Date -Format "%y%M%d"
 						$BUILD="${env:BUILD_NUMBER}"
 						$TAG="$($NOW).$($BUILD)"
-                        		$env:KUBECONFIG="$filepath"
-                        		helm upgrade --install pet-clinic pet-clinic --set image.tag=$TAG
+                        		        $env:KUBECONFIG="$filepath"
+                                                echo "$filepath"
+                                                helm version
+                        		        helm upgrade --install pet-clinic pet-clinic --set image.tag=$TAG
 					'''
                 }
             }
