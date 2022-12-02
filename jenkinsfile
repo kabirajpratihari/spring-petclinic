@@ -24,10 +24,10 @@ pipeline {
                     powershell '''
 						$IMAGE="dev-promotion-assessment"
 						$NOW=Get-Date -Format "%y%M%d"
-						$BUILD="${BUILD_NUMBER}"
+						$BUILD="${env:BUILD_NUMBER}"
 						$TAG="$($NOW).$($BUILD)"
 						$ACR_LOGINSERVER="kabirajdemoacr.azurecr.io"
-						docker login ${ACR_LOGINSERVER} --username ${USERNAME} --password ${TOKEN}
+						docker login ${ACR_LOGINSERVER} --username ${env:USERNAME} --password ${env:TOKEN}
 						docker build -t ${IMAGE}:${TAG} .
 						docker images
 						docker tag ${IMAGE}:${TAG} ${ACR_LOGINSERVER}/${IMAGE}:${TAG}
