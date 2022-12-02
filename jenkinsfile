@@ -49,9 +49,8 @@ pipeline {
 						$BUILD="${env:BUILD_NUMBER}"
 						$TAG="$($NOW).$($BUILD)"
                         		        $env:KUBECONFIG="$filepath"
-                                                echo "$filepath"
-                                                helm version
-                        		        helm upgrade --install pet-clinic pet-clinic --set image.tag=$TAG
+                                                C:\"Program Files"\Helm\windows-amd64\helm version
+                        		        C:\"Program Files"\Helm\windows-amd64\helm upgrade --install pet-clinic pet-clinic --set image.tag=$TAG
 					'''
                 }
             }
