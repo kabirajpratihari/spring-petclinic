@@ -36,7 +36,23 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to AKS') {
+	        when {
+		        anyOf {
+			        branch 'develop'; branch 'main'
+	            }
+            }
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'filepath')]) {
+                    powershell '''
+						$NOW=Get-Date -Format "%y%M%d"
+						$BUILD="${env:BUILD_NUMBER}"
+						$TAG="$($NOW).$($BUILD)"
+                        		$env:KUBECONFIG="$filepath"
+                        		helm upgrade --install pet-clinic pet-clinic --set image.tag=$TAG
+					'''
+                }
+            }
+        }
     }
 }
-
-

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "pet-clinic.fullname" . }}
+  namespace: demo
   labels:
     {{- include "pet-clinic.labels" . | nindent 4 }}
 spec:

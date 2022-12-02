@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "pet-clinic.fullname" . }}
+  namespace: demo
   labels:
     {{- include "pet-clinic.labels" . | nindent 4 }}
 spec:
