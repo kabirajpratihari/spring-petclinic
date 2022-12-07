@@ -34,6 +34,7 @@ pipeline {
 						docker push ${ACR_LOGINSERVER}/${IMAGE}:${TAG}
 					'''
                 }
+		input message: 'Want to continue?'
             }
         }
         stage('Deploy to AKS') {
