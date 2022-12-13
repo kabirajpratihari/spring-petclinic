@@ -13,13 +13,44 @@ pipeline {
                 powershell 'mvn clean install'
             }
         }
-        stage('Build and push Docker Image') {
+        stage('Maven Test') {
+            when {
+		        anyOf {
+			        branch 'feature'; branch 'develop'; branch 'main'
+		        }
+            } 	
+            steps {
+                powershell 'mvn test'
+            }
+        }
+        stage('Build and scan Docker Image') {
 	        when {
 		        anyOf {
 			        branch 'develop'; branch 'main'
 	            }
             }
             steps {
+                powershell '''
+					$IMAGE="dev-promotion-assessment"
+					$NOW=Get-Date -Format "%y%M%d"
+					$BUILD="${env:BUILD_NUMBER}"
+					$TAG="$($NOW).$($BUILD)"
+					docker build -t ${IMAGE}:${TAG} .
+					docker images
+                    docker pull aquasec/trivy:latest
+                    $var = "C:\\Users\\azureuser"
+                    docker run --rm -v ${var}/tmp:/root/.cache/ -v //var/run/docker.sock:/var/run/docker.sock  aquasec/trivy:latest image ${IMAGE}:${TAG}
+				'''
+            }
+        }
+        stage('Push Docker Image') {
+	        when {
+		        anyOf {
+			        branch 'develop'; branch 'main'
+	            }
+            }
+            steps {
+                input message: 'Please click proceed if the docker image scan looks good else click abort'
                 withCredentials([usernamePassword(credentialsId: 'docker-cred', passwordVariable: 'TOKEN', usernameVariable: 'USERNAME')]) {
                     powershell '''
 						$IMAGE="dev-promotion-assessment"
@@ -28,9 +59,7 @@ pipeline {
 						$TAG="$($NOW).$($BUILD)"
 						$ACR_LOGINSERVER="kabirajdemoacr.azurecr.io"
 						docker login ${ACR_LOGINSERVER} --username ${env:USERNAME} --password ${env:TOKEN}
-						docker build -t ${IMAGE}:${TAG} .
-						docker images
-						docker tag ${IMAGE}:${TAG} ${ACR_LOGINSERVER}/${IMAGE}:${TAG}
+                        docker tag ${IMAGE}:${TAG} ${ACR_LOGINSERVER}/${IMAGE}:${TAG}
 						docker push ${ACR_LOGINSERVER}/${IMAGE}:${TAG}
 					'''
                 }
@@ -48,9 +77,9 @@ pipeline {
 						$NOW=Get-Date -Format "%y%M%d"
 						$BUILD="${env:BUILD_NUMBER}"
 						$TAG="$($NOW).$($BUILD)"
-                        		        $env:KUBECONFIG="$filepath"
-                                                C:\\"Program Files"\\Helm\\windows-amd64\\helm version
-                        		        C:\\"Program Files"\\Helm\\windows-amd64\\helm upgrade --install pet-clinic pet-clinic --set image.tag=$TAG
+                        $env:KUBECONFIG="$filepath"
+                        C:\\"Program Files"\\Helm\\windows-amd64\\helm version
+                        C:\\"Program Files"\\Helm\\windows-amd64\\helm upgrade --install pet-clinic pet-clinic --set image.tag=$TAG
 					'''
                 }
             }
