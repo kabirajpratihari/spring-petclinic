@@ -39,7 +39,7 @@ pipeline {
 					docker images
                     docker pull aquasec/trivy:latest
                     $var = "C:\\Users\\azureuser"
-                    docker run --rm -v ${var}/tmp:/root/.cache/ -v //var/run/docker.sock:/var/run/docker.sock  aquasec/trivy:latest image ${IMAGE}:${TAG} --light --format table
+                    docker run --rm -v ${var}/tmp:/root/.cache/ -v //var/run/docker.sock:/var/run/docker.sock  aquasec/trivy:latest image ${IMAGE}:${TAG} --light --format json
 				'''
             }
         }
