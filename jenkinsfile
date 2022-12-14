@@ -30,7 +30,7 @@ pipeline {
 	            }
             }
             steps {
-                withSonarQubeEnv(credentialsId: 'sonar-global-token', installationName: 'sonarqube-local', envOnly: true) {
+                withSonarQubeEnv(credentialsId: 'sonarqube-global-token', installationName: 'sonarqube-local', envOnly: true) {
                     timeout(time: 1, unit: 'HOURS') {
                         powershell '''
                             mvn clean package verify sonar:sonar -Dsonar.projectKey=spring-pet-clinic -Dsonar.host.url=${env:SONAR_HOST_URL} -Dsonar.login=${env:SONAR_AUTH_TOKEN}
