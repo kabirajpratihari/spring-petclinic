@@ -31,13 +31,22 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv(credentialsId: 'sonarqube-global-token', installationName: 'sonarqube-local', envOnly: true) {
-                    timeout(time: 1, unit: 'HOURS') {
-                        powershell '''
-                            mvn clean package verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar "-Dsonar.projectKey=spring-pet-clinic" "-Dsonar.host.url=${env:SONAR_HOST_URL}" "-Dsonar.login=${env:SONAR_AUTH_TOKEN}"
-                        '''
-                    }
+                    powershell '''
+                        mvn clean package verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar "-Dsonar.projectKey=spring-pet-clinic" "-Dsonar.host.url=${env:SONAR_HOST_URL}" "-Dsonar.login=${env:SONAR_AUTH_TOKEN}"
+                    '''
                 }
-                waitForQualityGate abortPipeline: true
+            }
+        }
+        stage('Quality Gate check') {
+            when {
+		        anyOf {
+			        branch 'feature'; branch 'develop'; branch 'main'
+	            }
+            }
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
         stage('Build and scan Docker Image') {
