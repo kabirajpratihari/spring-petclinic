@@ -29,16 +29,14 @@ pipeline {
 			        branch 'feature'; branch 'develop'; branch 'main'
 	            }
             }
-            steps {
-                withSonarQubeEnv('sonarqube-local', envOnly: true) {
-                    timeout(time: 1, unit: 'HOURS') {
-                        powershell '''
-                            mvn clean package verify sonar:sonar -Dsonar.projectKey=spring-pet-clinic -Dsonar.host.url=${env:SONAR_HOST_URL} -Dsonar.login=${env:SONAR_AUTH_TOKEN}
-                        '''
-                        def qg = waitForQualityGate()
-                        if (qg.status != 'OK') {
-                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                        }
+            withSonarQubeEnv('sonarqube-local', envOnly: true) {
+                timeout(time: 1, unit: 'HOURS') {
+                    powershell '''
+                        mvn clean package verify sonar:sonar -Dsonar.projectKey=spring-pet-clinic -Dsonar.host.url=${env:SONAR_HOST_URL} -Dsonar.login=${env:SONAR_AUTH_TOKEN}
+                    '''
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
                     }
                 }
             }
