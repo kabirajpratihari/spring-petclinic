@@ -33,12 +33,8 @@ pipeline {
                 script {
                     withSonarQubeEnv(credentialsId: 'sonarqube-global-token', installationName: 'sonarqube-local', envOnly: true) {
                         powershell '''
-                            mvn clean package verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar "-Dsonar.projectKey=spring-pet-clinic" "-Dsonar.host.url=${env:SONAR_HOST_URL}" "-Dsonar.login=${env:SONAR_AUTH_TOKEN}"
+                            mvn clean package verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar "-Dsonar.projectKey=spring-pet-clinic" "-Dsonar.host.url=${env:SONAR_HOST_URL}" "-Dsonar.login=${env:SONAR_AUTH_TOKEN}" "-Dsonar.qualitygate.wait=true" "-Dsonar.qualitygate.timeout=300"
                         '''
-                        def qg = waitForQualityGate()
-                        if (qg.status != 'OK') {
-                          error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                        }
                     }
                 }
             }
