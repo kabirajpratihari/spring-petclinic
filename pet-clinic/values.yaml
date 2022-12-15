@@ -69,7 +69,7 @@ ingress:
   hosts:
     - host: pet-clinic.demo
       paths:
-        - path: /
+        - path: /home
           pathType: ImplementationSpecific
   tls: []
   #  - secretName: chart-example-tls
