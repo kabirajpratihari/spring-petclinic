@@ -37,8 +37,8 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  #type: LoadBalancer
-  type: ClusterIP
+  type: LoadBalancer
+  #type: ClusterIP
   trafficPolicy: Local
   port: 80
   targetPort: 8080
@@ -61,7 +61,7 @@ service:
 
 
 ingress:
-  enabled: true
+  enabled: false
   className: nginx
   annotations:
     kubernetes.io/ingress.class: nginx
