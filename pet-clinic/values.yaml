@@ -37,8 +37,8 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: LoadBalancer
-  #type: ClusterIP
+  #type: LoadBalancer
+  type: ClusterIP
   trafficPolicy: Local
   port: 80
   targetPort: 8080
@@ -72,8 +72,8 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     - paths:
-        - path: /*
-          pathType: ImplementationSpecific
+        - path: /
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
