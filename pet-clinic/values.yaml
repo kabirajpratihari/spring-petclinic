@@ -39,7 +39,6 @@ securityContext: {}
 service:
   #type: LoadBalancer
   type: ClusterIP
-  trafficPolicy: Local
   port: 80
   targetPort: 8080
 

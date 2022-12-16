@@ -7,7 +7,6 @@ metadata:
     {{- include "pet-clinic.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
-  externalTrafficPolicy: {{ .Values.service.trafficPolicy }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
