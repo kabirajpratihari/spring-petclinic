@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'fonetwish'
     }
+    options {
+        ansiColor('xterm')
+    }
     stages {
         stage('Maven Clean Install') {
             when {
